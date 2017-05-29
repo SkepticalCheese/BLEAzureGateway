@@ -18,8 +18,7 @@ app.get('/', function(req, res) {
     ];
 
     res.render('pages/index', {
-        drinks: drinks,
-        tagline: tagline
+        drinks: drinks
     });
 });
 
