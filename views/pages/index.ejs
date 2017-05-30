@@ -10,14 +10,32 @@
 	</header>
 
 	<main>
-		<div class="jumbotron">
-			<h1>This is great</h1>
-			<ul>
-				<%drinks.forEach(function(drink){%>
-					<li><%= drink.name %> - <%= drink.drunkness %></li>
+        <div class="col-md-12">
+         <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th></th>
+				<th></th>
+			</tr>
+            </thead>
+            <tbody>
+				<%sensors.forEach(function(sensor){%>
+				<tr>
+					<td><%= sensor.name %></td>
+					<td><%= sensor.id %></td>
+					<td><%= sensor.type %></td>
+					<td><%= sensor.status %></td>
+					<td> <button type="button" class="btn btn-sm btn-primary">Edit</button> </td>
+					<td> <button type="button" class="btn btn-sm btn-danger">Unpair</button> </td>
+				</tr>
 				<%});%>
-			</ul>
-		</div>
+            </tbody>
+          </table>
+        </div>
 	</main>
 
 	<footer>

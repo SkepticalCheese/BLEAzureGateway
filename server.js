@@ -11,14 +11,14 @@ app.set('view engine', 'ejs');
 
 // index page 
 app.get('/', function(req, res) {
-    var drinks = [
-        { name: 'Bloody Mary', drunkness: 3 },
-        { name: 'Martini', drunkness: 5 },
-        { name: 'Scotch', drunkness: 10 }
+    var sensors = [
+        { name: 'Bloody Mary', id: '00112233-1', type: 'Door sensor', status: 'Connected' },
+        { name: 'Martini',  id: '00112233-1', type: 'Door sensor', status: 'Connected' },
+        { name: 'Scotch',  id: '00112233-1', type: 'Door sensor', status: 'Connected' }
     ];
 
     res.render('pages/index', {
-        drinks: drinks
+        sensors: sensors
     });
 });
 
