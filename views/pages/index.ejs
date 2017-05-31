@@ -25,12 +25,12 @@
             <tbody>
 				<%sensors.forEach(function(sensor){%>
 				<tr>
-					<td><%= sensor.name %></td>
-					<td><%= sensor.id %></td>
-					<td><%= sensor.type %></td>
-					<td><%= sensor.status %></td>
-					<td> <button type="button" class="btn btn-sm btn-primary">Edit</button> </td>
-					<td> <button type="button" class="btn btn-sm btn-danger">Unpair</button> </td>
+					<td><%=sensor.name%></td>
+					<td><%=sensor.id%></td>
+					<td><%=sensor.type%></td>
+					<td><%=sensor.status%></td>
+					<td> <button type="button" class="btn btn-sm btn-primary" onclick="location.href='/edit/<%=sensor.id%>';">Edit</button> </td>
+					<td> <button type="button" class="btn btn-sm btn-danger" onclick="location.href='/unpair/<%=sensor.id%>';">Unpair</button> </td>
 				</tr>
 				<%});%>
             </tbody>
