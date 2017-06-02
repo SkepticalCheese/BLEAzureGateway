@@ -3,17 +3,18 @@ Web server code
 */
 'use strict';
 
-// load the things we need
+// load the modules we need
 var debug = require('debug')('server');
 var express = require('express');
 var bodyParser = require('body-parser');
 
+// sets up express to use JSON encodeb bodies
 var app = express();
-app.use(bodyParser.urlencoded({ extended: false })); // support encoded bodies
-app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: false })); 
+app.use(bodyParser.json());
 
 var Bleazure = require ('./bleazure.js');
-var bleazure = new Bleazure();
+var bleazure = new Bleazure('./bleasure.json', 'devices.json');
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');

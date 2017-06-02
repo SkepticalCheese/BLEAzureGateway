@@ -13,5 +13,13 @@
     "start": "node server.js"
   },
   "author": "WPBG",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SkepticalCheese/BLEAzureGateway.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SkepticalCheese/BLEAzureGateway/issues"
+  },
+  "homepage": "https://github.com/SkepticalCheese/BLEAzureGateway#readme"
 }

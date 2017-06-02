@@ -1,21 +1,39 @@
 'use strict';
 
+var noble = require('noble');
+var fs = require('fs');
+
 // set DEBUG variable to bleazure to see output
 var debug = require('debug')('bleazure');
 
 // local variables
-var sensors;
+var sensors; // List of paired sensors
+var config;  // Parameters from Config file
 
 // Food is a base class
 class Bleazure {
 
-    constructor () {
-        debug ('initializing BleAzure');
-        sensors = [
-            { name: 'Bloody Mary',  id: '00112233-1', type: 'Door sensor', status: 'Connected' },
-            { name: 'Martini',      id: '00112244-1', type: 'Door sensor', status: 'Connected' },
-            { name: 'Scotch',       id: '00112255-1', type: 'Door sensor', status: 'Connected' }
-        ];
+    constructor (configfilename, devicefilename) {
+
+        // *** Config file should contain the entries below
+        // - sensorServiceUuid
+        // - sensorSubServiceUuid
+        // - sensorCharacteristicUuid
+
+        debug('Reading config file');
+        config = fs.readFileSync(configfilename);
+
+        // Reads paired devices file - assume empty if not found
+        debug ('Readind paired devices list');
+        try {
+            sensors = fs.readFileSync(devicefilename);
+        } catch (err) {
+            if (err.code === 'ENOENT') {
+                sensors = [];
+            } else {
+                throw err;
+            }
+        }
     }
 
     // Returns all registered sensors
