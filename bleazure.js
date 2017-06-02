@@ -34,8 +34,9 @@ var TypeEnum = {
 };
 
 // local variables
-var sensors; // List of paired sensors
-var config;  // Parameters from Config file
+var sensors;        // List of paired sensors
+var config;         // Parameters from Config file
+var sensorfilename; // sensor's file name
 
 // Main class
 class Bleazure {
@@ -46,18 +47,23 @@ class Bleazure {
    *  - sensorServiceUuid
    *  - sensorSubServiceUuid
    *  - sensorCharacteristicUuid
-   * @param sensorfilename name of the JSON file which will store info about the paired devices and sensors
+   * @param _sensorfilename name of the JSON file which will store info about the paired devices and sensors
    */
-    constructor (configfilename, sensorfilename) {
+    constructor (configfilename, _sensorfilename) {
+        var contents;
 
+        sensorfilename = _sensorfilename;
+        
         debug('Reading config file');
-        config = fs.readFileSync(configfilename);
+        contents = fs.readFileSync(configfilename);
+        config = JSON.parse(contents);
         debug (config);
 
         // Reads paired devices file - assume empty if not found
-        debug ('Readind paired devices list');
+        debug ('Reading paired devices list');
         try {
-            sensors = fs.readFileSync(sensorfilename);
+            contents = fs.readFileSync(sensorfilename);
+            sensors = JSON.parse(contents);
         } catch (err) {
             if (err.code === 'ENOENT') {
                 sensors = [];
@@ -65,11 +71,13 @@ class Bleazure {
                 throw err;
             }
         }
+        debug (sensors);
 
         // Augments sensors array
-        for (var i=0; i<=sensors.length; i++) {
-            sensors[i].type   = TypeEnum.properties[sensors[i].typeId].name;
-            sensors[i].status = StatusEnum.properties[sensors[i].statusId].status;
+        for (var i=0; i<sensors.length; i++) {
+            sensors[i].type     = TypeEnum.properties[sensors[i].typeId].name;
+            sensors[i].statusId = StatusEnum.DISCONNECTED;
+            sensors[i].status   = StatusEnum.properties[sensors[i].statusId].name;
         }       
     }
 
@@ -94,6 +102,7 @@ class Bleazure {
         var pos = getSensorPos (id);
         if (pos >= 0) {
             sensors[pos].name = newName;
+            saveSensorsFile ();
             return newName;
         }
     }
@@ -118,13 +127,23 @@ class Bleazure {
  * @return an integer. Returns -1 if not found.
  */
 function getSensorPos (id) {
-    for (var i=0; i<=sensors.length; i++) {
+    for (var i=0; i<sensors.length; i++) {
 //            debug ('searching:', sensors[i]);
         if (sensors[i].id == id) {
             return i;
         }
     }
     return -1;
+}
+
+/*
+ * For internal use: Persists list of sensors in JSON file
+ */
+function saveSensorsFile () {
+    // TODO: No need to save status, statusId or type
+    fs.writeFile(sensorfilename,  JSON.stringify(sensors), function (err) {
+        if (err) return debug('error saving sensors file:', err);
+    });
 }
 
 module.exports = Bleazure;

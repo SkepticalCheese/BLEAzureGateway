@@ -14,7 +14,7 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: false })); 
 app.use(bodyParser.json());
 
-var bleazure = new Bleazure('./bleasure.json', 'devices.json');
+var bleazure = new Bleazure('./bleasure.json', 'sensors.json');
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
