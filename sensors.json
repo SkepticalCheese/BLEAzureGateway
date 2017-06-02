@@ -1,0 +1,5 @@
+[
+    { "name": "Bloody Mary",  "id": "00112233-1", "typeId": 1, "statusId": 1 },
+    { "name": "Martini",      "id": "00112244-1", "typeId": 1, "statusId": 2 },
+    { "name": "Scotch",       "id": "00112255-1", "typeId": 2, "statusId": 3 }
+]
