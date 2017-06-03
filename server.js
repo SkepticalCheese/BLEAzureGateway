@@ -32,9 +32,9 @@ app.get('/', function(req, res) {
 
 
 // Scan page
-io.on('connection', function (socket) {
-    debug ('socket connected');
-});
+//io.on('connection', function (socket) {
+//    debug ('socket connected');
+//});
 
 app.get('/scan', function(req, res) {
     res.render('pages/scan', {
@@ -42,7 +42,7 @@ app.get('/scan', function(req, res) {
     });
 
     bleazure.startScanning(function () {
-        debug ('callback called');
+        debug ('scan callback called');
         io.emit('refresh', { refresh: true });
     });
 });
