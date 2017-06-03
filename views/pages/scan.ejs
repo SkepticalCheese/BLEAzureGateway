@@ -2,6 +2,16 @@
 <html lang="en">
 <head>
 	<% include ../partials/head %>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var socket = io.connect('http://localhost');
+		socket.on('refresh', function (data) {
+			console.log('socket received');
+			location.reload();
+		});
+	</script>
+
 </head>
 <body class="container">
 
@@ -10,27 +20,23 @@
 	</header>
 
 	<main>
-        <div class="col-md-12">
+        <div class="col-md-10">
          <table class="table table-striped">
             <thead>
               <tr>
-                <th>Name</th>
                 <th>ID</th>
                 <th>Type</th>
                 <th>Status</th>
                 <th></th>
-				<th></th>
 			</tr>
             </thead>
             <tbody>
 				<%sensors.forEach(function(sensor){%>
 					<tr>
-						<td><%=sensor.name%></td>
 						<td><%=sensor.id%></td>
 						<td><%=sensor.type%></td>
 						<td><%=sensor.status%></td>
-						<td> <button type="button" class="btn btn-sm btn-primary" onclick="location.href='/edit/<%=sensor.id%>';">Edit</button> </td>
-						<td> <button type="button" class="btn btn-sm btn-danger" onclick="location.href='/unpair/<%=sensor.id%>';">Unpair</button> </td>
+						<td> <button type="button" class="btn btn-sm btn-primary" onclick="location.href='/pair/<%=sensor.id%>';">Pair</button> </td>
 					</tr>
 				<%});%>
             </tbody>

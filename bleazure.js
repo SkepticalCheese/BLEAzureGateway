@@ -37,6 +37,8 @@ var TypeEnum = {
 var sensors;        // List of paired sensors
 var config;         // Parameters from Config file
 var sensorfilename; // sensor's file name
+var isScanning;     // Indicates if we aer scanning for devices
+var devicesFound;   // List of devices currently found while scanning
 
 // Main class
 class Bleazure {
@@ -47,12 +49,16 @@ class Bleazure {
    *  - sensorServiceUuid
    *  - sensorSubServiceUuid
    *  - sensorCharacteristicUuid
+   *  - scanTimeout - time in miliseconds app should stop looking for devices
    * @param _sensorfilename name of the JSON file which will store info about the paired devices and sensors
    */
     constructor (configfilename, _sensorfilename) {
         var contents;
 
+        // Initialize state variables
         sensorfilename = _sensorfilename;
+        isScanning = false;
+        devicesFound = [];
         
         debug('Reading config file');
         contents = fs.readFileSync(configfilename);
@@ -73,7 +79,7 @@ class Bleazure {
         }
         debug (sensors);
 
-        // Augments sensors array
+        // Augments sensors array info
         for (var i=0; i<sensors.length; i++) {
             sensors[i].type     = TypeEnum.properties[sensors[i].typeId].name;
             sensors[i].statusId = StatusEnum.DISCONNECTED;
@@ -91,6 +97,46 @@ class Bleazure {
    */
     getAllSensors () {
         return sensors;
+    }
+
+   /**
+   * Returns all sensors found during scanning 
+   * @return as an array of objects following the structure below:
+   * - id
+   * - typeId
+   * - type
+   */
+    getFoundSensors () {
+        return devicesFound;
+    }
+   /**
+   * Sets user friendly name for a sensor 
+   * @param callback function to be called when a device is found.
+   */
+    startScanning (callback) {
+        if (! isScanning) {
+            isScanning = true;
+            devicesFound = [];
+        }
+
+        setTimeout(function () {
+            isScanning = false;
+            devicesFound = [];
+            // TODO: add code to stop scanning            
+        },config.scanTimeout); 
+
+        setTimeout(function () {
+            devicesFound = [{id:'00992255-1', typeId:2, type:'Light switch'}];
+            callback ();
+            setTimeout(function () {
+                devicesFound.push ({id:'00992255-2', typeId:2, type:'Light switch'});
+                callback ();                
+                setTimeout(function () {
+                    devicesFound.push ({id:'00992255-3', typeId:2, type:'Light switch'});
+                    callback ();                
+                },3000);        
+            },3000);
+        },3000);
     }
 
    /**

@@ -6,6 +6,10 @@ Web server code
 // load the modules we need
 var debug = require('debug')('server');
 var express = require('express');
+
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
 var bodyParser = require('body-parser');
 var Bleazure = require ('./bleazure.js');
 
@@ -13,6 +17,7 @@ var Bleazure = require ('./bleazure.js');
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false })); 
 app.use(bodyParser.json());
+
 
 var bleazure = new Bleazure('./bleasure.json', 'sensors.json');
 
@@ -24,6 +29,30 @@ app.get('/', function(req, res) {
     sendHome(res);
 });
 
+
+// Scan page
+app.get('/scan', function(req, res) {
+    sendScanPage (res);
+
+    bleazure.startScanning(function () {
+        debug ('callback called');
+        io.emit('refresh', { refresh: true });
+    });
+
+    // connects socket
+    io.on('connection', function (socket) {
+        debug ('socket connected');
+        sendScanPage (res);
+    });
+});
+
+function sendScanPage (res) {
+    res.render('pages/scan', {
+        sensors: bleazure.getFoundSensors()
+    });
+}
+
+// Edit sensor name page
 app.get('/edit/:sensorId', function(req, res) {
 //    debug ('edit', sensor);
     var sensor = bleazure.getSensorById(req.params.sensorId);
@@ -33,7 +62,7 @@ app.get('/edit/:sensorId', function(req, res) {
     });
 });
 
-// This route receives the posted form.
+// posted form from the edit page above
 app.post('/edit/:sensorId', function(req, res){
     var name = req.body.name;
     debug ('post name:', name);
@@ -50,5 +79,6 @@ function sendHome(res) {
     });
 }
 
-app.listen(8080);
+//app.listen(8080);
+server.listen(8080);
 debug('listening on port 8080');

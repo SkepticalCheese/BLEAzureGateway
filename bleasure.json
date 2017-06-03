@@ -1,5 +1,6 @@
 {
     "sensorServiceUuid":"cdab",
     "sensorSubServiceUuid":"ff",
-    "sensorCharacteristicUuid":"ff01"
+    "sensorCharacteristicUuid":"ff01",
+    "scanTimeout": 30000
  }
