@@ -5,20 +5,21 @@ Web server code
 
 // load the modules we need
 var debug = require('debug')('server');
+var path = require('path');
 var express = require('express');
+var bodyParser = require('body-parser');
 
+var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-var bodyParser = require('body-parser');
-var Bleazure = require ('./bleazure.js');
-
 // sets up express to use JSON encodeb bodies
-var app = express();
+
 app.use(bodyParser.urlencoded({ extended: false })); 
 app.use(bodyParser.json());
+app.use(express.static(__dirname + '/node_modules')); 
 
-
+var Bleazure = require ('./bleazure.js');
 var bleazure = new Bleazure('./bleasure.json', 'sensors.json');
 
 // set the view engine to ejs
@@ -31,26 +32,20 @@ app.get('/', function(req, res) {
 
 
 // Scan page
+io.on('connection', function (socket) {
+    debug ('socket connected');
+});
+
 app.get('/scan', function(req, res) {
-    sendScanPage (res);
+    res.render('pages/scan', {
+        sensors: bleazure.getFoundSensors()
+    });
 
     bleazure.startScanning(function () {
         debug ('callback called');
         io.emit('refresh', { refresh: true });
     });
-
-    // connects socket
-    io.on('connection', function (socket) {
-        debug ('socket connected');
-        sendScanPage (res);
-    });
 });
-
-function sendScanPage (res) {
-    res.render('pages/scan', {
-        sensors: bleazure.getFoundSensors()
-    });
-}
 
 // Edit sensor name page
 app.get('/edit/:sensorId', function(req, res) {

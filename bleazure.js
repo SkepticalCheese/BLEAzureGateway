@@ -39,6 +39,7 @@ var config;         // Parameters from Config file
 var sensorfilename; // sensor's file name
 var isScanning;     // Indicates if we aer scanning for devices
 var devicesFound;   // List of devices currently found while scanning
+var scanCallback;
 
 // Main class
 class Bleazure {
@@ -114,10 +115,13 @@ class Bleazure {
    * @param callback function to be called when a device is found.
    */
     startScanning (callback) {
-        if (! isScanning) {
-            isScanning = true;
-            devicesFound = [];
+        if (isScanning) {
+            return;
         }
+        
+        isScanning = true;
+        devicesFound = [];
+        scanCallback = callback;
 
         setTimeout(function () {
             isScanning = false;
@@ -127,16 +131,16 @@ class Bleazure {
 
         setTimeout(function () {
             devicesFound = [{id:'00992255-1', typeId:2, type:'Light switch'}];
-            callback ();
+            scanCallback ();
             setTimeout(function () {
                 devicesFound.push ({id:'00992255-2', typeId:2, type:'Light switch'});
-                callback ();                
+                scanCallback ();                
                 setTimeout(function () {
                     devicesFound.push ({id:'00992255-3', typeId:2, type:'Light switch'});
-                    callback ();                
-                },3000);        
-            },3000);
-        },3000);
+                    scanCallback ();                
+                },2000);        
+            },2000);
+        },2000);
     }
 
    /**
