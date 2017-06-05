@@ -27,9 +27,16 @@ app.set('view engine', 'ejs');
 
 // index page 
 app.get('/', function(req, res) {
-    sendHome(res);
+    sendHome(res, null);
 });
 
+// Unpair sensor
+app.get('/unpair/:sensorId', function(req, res) {
+//    debug ('edit', sensor);
+    var sensor = bleazure.unpairSensor(req.params.sensorId);
+//    debug ('edit', sensor);
+    sendHome(res, 'unpairing sensor ' + req.params.sensorId);
+});
 
 // Scan page
 //io.on('connection', function (socket) {
@@ -46,6 +53,13 @@ app.get('/scan', function(req, res) {
         io.emit('refresh', { refresh: true });
     });
 });
+
+// Pair new sensor
+app.get('/pair/:sensorId', function(req, res) {
+//    debug ('edit', sensor);
+    var sensor = bleazure.pairSensor(req.params.sensorId, req.params.sensorId);
+//    debug ('edit', sensor);
+    sendHome(res, 'pairing sensor ' + req.params.sensorId);
 
 // Edit sensor name page
 app.get('/edit/:sensorId', function(req, res) {
@@ -66,11 +80,11 @@ app.post('/edit/:sensorId', function(req, res){
 });
 
 // Helpers
-function sendHome(res) {
+function sendHome(res, message) {
     var sensors = bleazure.getAllSensors();
     
     res.render('pages/index', {
-        sensors: sensors
+        sensors: sensors, message: message
     });
 }
 

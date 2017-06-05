@@ -25,7 +25,7 @@ var StatusEnum = {
  * Device types
  */
 var TypeEnum = {
-  DOORSENSOR:    1,
+  DOORSENSOR:   1,
   LIGHTSWITCH:  2,
   properties: {
     1: {name: 'Door sensor',   value: 1},
@@ -119,6 +119,7 @@ class Bleazure {
             return;
         }
         
+        debug ('Started scanning');
         isScanning = true;
         devicesFound = [];
         scanCallback = callback;
@@ -126,6 +127,7 @@ class Bleazure {
         setTimeout(function () {
             isScanning = false;
             devicesFound = [];
+            debug ('Stopped scanning');
             // TODO: add code to stop scanning            
         },config.scanTimeout); 
 
