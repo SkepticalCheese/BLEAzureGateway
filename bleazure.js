@@ -1,5 +1,5 @@
 'use strict';
-// TODO: use ID's instead of descriptions for types and status
+// TODO: refactor to separate devices and sensors
 
 var noble = require('noble');
 var fs = require('fs');
@@ -170,6 +170,46 @@ class Bleazure {
 //            debug ('returning:', sensors[pos]);
             return (sensors[pos]);
         }
+    }
+
+   /**
+   * Pairs a sensor 
+   * @param id ID of the sensor
+   * @param newName Name of the new sensor
+   * @return new name if sensor is being paired, null otherwise
+   */
+    // TODO: Need to review this really a device should be paired, not a sensor
+    pairSensor (id, newName) {
+        var pos = getSensorPos (id);
+        if (pos >= 0) {
+            return null;  // Sensor already paired
+        }
+        // TODO: Need to add real code to scan for device and add all sensors under it
+        sensors.push ({
+            id: id, 
+            name: newName, 
+            typeId: TypeEnum.DOORSENSOR, 
+            type: TypeEnum.properties[1].name,
+            statusId: StatusEnum.CONNECTING,
+            status: StatusEnum.properties[2].name
+        });
+        saveSensorsFile ();
+        return newName;
+    }
+
+   /**
+   * Unpairs a sensor 
+   * @param id ID of the sensor
+   * @return 1  if sensor is being unpaired, 0 otherwise
+   */
+    // TODO: Need to review this really a device should be paired, not a sensor
+    unpairSensor (id) {
+        var pos = getSensorPos (id);
+        if (pos >= 0) {
+            sensors.splice (pos, 1);
+            return 1;  // Sensor already paired
+        }
+        return 0;
     }
 }
 

@@ -9,16 +9,16 @@
 		<% include ../partials/header %>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
         <script>
-        $(document).ready(function(){
-            var user;
-            $("#save").click(function(){
-            name=$("#inputName").val();
-            $.post("/edit/<%=sensor.id%>",{name: name}, function(data){
-                //alert("Name was changed!");
-                location.href='/';
+            $(document).ready(function(){
+                var user;
+                $("#save").click(function(){
+                    name=$("#inputName").val();
+                    $.post("/edit/<%=sensor.id%>",{name: name}, function(data){
+                        location.href='/';
+                        //console.log (data);
+                    });
+                });
             });
-            });
-        });
         </script>
 	</header>
 
