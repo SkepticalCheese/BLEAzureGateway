@@ -11,7 +11,8 @@
     "fs": "0.0.1-security",
     "http": "0.0.0",
     "noble": "^1.8.1",
-    "socket.io": "^2.0.2"
+    "socket.io": "^2.0.2",
+    "url": "^0.11.0"
   },
   "devDependencies": {},
   "scripts": {

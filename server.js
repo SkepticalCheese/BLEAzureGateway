@@ -5,6 +5,7 @@ Web server code
 
 // load the modules we need
 var debug = require('debug')('server');
+const url = require('url');  
 //var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -14,8 +15,8 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 // sets up express to use JSON encodeb bodies
-app.use(bodyParser.urlencoded({ extended: false })); 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); 
 app.use(express.static(__dirname + '/node_modules')); 
 
 var Bleazure = require ('./bleazure.js');
@@ -26,7 +27,12 @@ app.set('view engine', 'ejs');
 
 // index page 
 app.get('/', function(req, res) {
-    sendHome(res, null, null);
+    if (req.query.message) {
+        sendHome(res, req.query.message, req.query.style);
+    }
+    else {
+        sendHome(res, null, null);
+    }
 });
 
 // Unpair sensor
@@ -70,9 +76,16 @@ app.post('/edit/:sensorId', function(req, res){
     var name = req.body.name;
     debug ('post name:', name);
     bleazure.setSensorName (req.params.sensorId, name);
-    res.send('done!');
+    //res.send('done!');
     //res.redirect ('/');
     //sendHome(res, 'Name has been updated!', 'alert alert-info');
+    res.redirect(url.format({
+        pathname: '/',
+        query: {
+            message:'Name has been updated!',
+            style: 'alert alert-info'
+        }
+    }));
 });
 
 // Helpers
